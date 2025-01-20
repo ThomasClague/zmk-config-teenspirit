@@ -21,22 +21,21 @@
 
 / {
     macros {
-	// promising candidate, only problem: impossible to hold shift through
-	// the activation and still have it registered as held afterwards
+        // promising candidate, only problem: impossible to hold shift through
+        // the activation and still have it registered as held afterwards
         macro_shiftable_sch: macro_shiftable_sch {
             label = "Macro_shiftable_sch";
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <
-                    &macro_tap &kp S
-                    &macro_release &kp RSHIFT
-                    &macro_tap &kp C &kp H
+                &macro_tap &kp S
+                &macro_release &kp RSHIFT
+                &macro_tap &kp C &kp H
             >;
             tap-ms = <10>;
         };
     };
 };
-
 
 #define COMBO(NAME, BINDINGS, KEYPOS) \
 combo_##NAME { \
@@ -58,20 +57,20 @@ combo_##NAME { \
 };
 
 #define COMBOS_TOP_ROW(LTPR, LTRM, LTMI, MTII, RTIM, RTMR, RTRP) \
-	SLOWCOMBO(_ltpr, LTPR, 0 1) \
-	COMBO(_ltrm, LTRM, 1 2) \
-	COMBO(_ltmi, LTMI, 2 3) \
-	SLOWCOMBO(_mtii, MTII, 3 4) \
-	COMBO(_rtim, RTIM, 4 5) \
-	COMBO(_rtmr, RTMR, 5 6) \
-	SLOWCOMBO(_rtrp, RTRP, 6 7)
-#define COMBOS_BOT_ROW(LBRM, LBMI, MBII, RBIM, RBMR) \
-	COMBO(_lbrm, LBRM, 8 9) \
-	COMBO(_lbmi, LBMI, 9 10) \
-	SLOWCOMBO(_mbii, MBII, 10 11) \
-	COMBO(_rbim, RBIM, 11 12) \
-	COMBO(_rbmr, RBMR, 12 13)
+    SLOWCOMBO(_ltpr, LTPR, 0 1) \
+    COMBO(_ltrm, LTRM, 1 2) \
+    COMBO(_ltmi, LTMI, 2 3) \
+    SLOWCOMBO(_mtii, MTII, 3 4) \
+    COMBO(_rtim, RTIM, 4 5) \
+    COMBO(_rtmr, RTMR, 5 6) \
+    SLOWCOMBO(_rtrp, RTRP, 6 7)
 
+#define COMBOS_BOT_ROW(LBRM, LBMI, MBII, RBIM, RBMR) \
+    COMBO(_lbrm, LBRM, 8 9) \
+    COMBO(_lbmi, LBMI, 9 10) \
+    SLOWCOMBO(_mbii, MBII, 10 11) \
+    COMBO(_rbim, RBIM, 11 12) \
+    COMBO(_rbmr, RBMR, 12 13)
 
 //  _______________________  _______________________
 // |  0  |  1  |  2  |  3  \/   4 |   5 |   6 |   7 |
@@ -79,16 +78,16 @@ combo_##NAME { \
 //             \ 14  | 15 /  \ 16 |  17 /
 //              ----------    ----------
 
-/{
+/ {
     combos {
         compatible = "zmk,combos";
-/* alphas */
-                     //  0+1    1+2    2+3    3+4    4+5      5+6      6+7
+        /* alphas */
+        //  0+1    1+2    2+3    3+4    4+5      5+6      6+7
         COMBOS_TOP_ROW(&kp W, &kp M, &kp B, &kp K, &kp V, &comsem, &dotcol)
-               COMBOS_BOT_ROW(&kp F, &kp P, &kp J, &kp X, &kp Z)
-                            //  8+9   9+10  10+11  11+12  12+13
+        COMBOS_BOT_ROW(&kp F, &kp P, &kp J, &kp X, &kp Z)
+        //  8+9   9+10  10+11  11+12  12+13
 
-/* usually on base layer */
+        /* usually on base layer */
         COMBO(q, &kp Q, 8 10)
         COMBO(k, &kp K, 14 15)
         COMBO(j, &kp J, 16 17)
@@ -100,7 +99,8 @@ combo_##NAME { \
         COMBO(minus, &kp MINUS, 11 12 17)
         COMBO(slash, &kp SLASH, 12 13 17)
         COMBO(esc2, &kp ESC, 9 10 14)
-/* parentheticals */
+
+        /* parentheticals */
         COMBO(lt, &kp LT, 1 10)
         COMBO(lbrc, &kp LBRC, 1 8)
         COMBO(lbkt, &kp LBKT, 2 9)
@@ -109,15 +109,19 @@ combo_##NAME { \
         COMBO(rpar, &kp RPAR, 4 11)
         COMBO(rbkt, &kp RBKT, 5 12)
         COMBO(rbrc, &kp RBRC, 6 13)
-/* caps */
+
+        /* caps */
         COMBO(caps, &caps_word, 2 5)
         COMBO(capslock, &kp CAPSLOCK, 1 6)
-/* deletion */
+
+        /* deletion */
         COMBO(bspc, &kp BSPC, 4 6)
         SLOWCOMBO(del, &kp DEL, 5 7)
         COMBO(delword, &kp LC(BSPC), 4 7)
-/* music */
-        SLOWCOMBO(music, &tog BUZ, 0 7 14 17)
+
+        /* music */
+        // Commented out the toggling of BUZ layer to remove PWM references:
+        // SLOWCOMBO(music, &tog BUZ, 0 7 14 17)
     };
 };
 
@@ -127,9 +131,7 @@ combo_##NAME { \
 //             \ 14  | 15 /  \ 16 |  17 /
 //              ----------    ----------
 
-
 / {
-
     behaviors {
         hl: homerow_mods_left {
             compatible = "zmk,behavior-hold-tap";
@@ -187,16 +189,14 @@ combo_##NAME { \
             mods = <(MOD_LSFT|MOD_RSFT)>;
         };
 
-        // buzzer config, copied from sadek baroudi:
-        // https://github.com/sadekbaroudi/zmk-fingerpunch-keyboards/blob/main/boards/arm/vulpes_majora_v1/vulpes_majora_v1.keymap#L71
-        tone: tone {
-            compatible = "chiptuner,behavior-tone";
-            #binding-cells = <1>;
-            pwms = <&pwm 10 PWM_USEC(20) PWM_POLARITY_NORMAL>;
-        };
+        // Buzzer config block commented out to remove PWM references:
+        // tone: tone {
+        //     compatible = "chiptuner,behavior-tone";
+        //     #binding-cells = <1>;
+        //     pwms = <&pwm 10 PWM_USEC(20) PWM_POLARITY_NORMAL>;
+        // };
     };
 };
-
 
 / {
     keymap {
@@ -235,7 +235,13 @@ combo_##NAME { \
             bindings = <
                 &kp EXCL       &kp AT         &kp HASH       &kp DOLLAR         &kp AMPERSAND  &kp ASTERISK   &kp PERCENT    &kp CARET
                                &kp GRAVE      &kp DQT        &kp UNDERSCORE     &kp BACKSLASH  &kp PIPE       &kp EQUAL
-                                              &kp TILDE      &tone 4400         &trans         &tone 440
+                                              &kp TILDE
+                                              // Uncomment if you had a tone call here, removed:
+                                              // &tone 4400
+                                              &trans
+                                              // Another tone call removed:
+                                              // &tone 440
+                                              &trans
             >;
         };
         function {
@@ -247,6 +253,9 @@ combo_##NAME { \
                                               &trans         &trans             &trans         &trans
             >;
         };
+
+        // Entire "buzz" layer commented out to remove PWM references:
+        /*
         buzz {
             label = "BUZ";
             bindings = <
@@ -254,8 +263,8 @@ combo_##NAME { \
                                &tone 740      &tone 622      &tone 554          &tone 587      &tone 659      &tone 698
                                               &tone 220      &tone 262          &tone 523      &tone 440
             >;
-            //&tone 1047
+            // &tone 1047
         };
-
+        */
     };
 };
