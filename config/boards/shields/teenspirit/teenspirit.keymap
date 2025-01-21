@@ -10,6 +10,8 @@
 #define SYM 3
 #define FUN 4
 #define BUZ 5
+/* NEW: Add a new define for the BT layer */
+#define BT 6
 
 // &lt {
 //     quick_tap_ms = <170>;
@@ -122,6 +124,12 @@ combo_##NAME { \
         /* music */
         // Commented out the toggling of BUZ layer to remove PWM references:
         // SLOWCOMBO(music, &tog BUZ, 0 7 14 17)
+
+        /*
+         * NEW: Toggle the BT layer by pressing R (position 0) + O (position 7).
+         * Using SLOWCOMBO so it's more forgiving on timing if you truly "hold".
+         */
+        SLOWCOMBO(bt, &tog BT, 0 7)
     };
 };
 
@@ -253,6 +261,29 @@ combo_##NAME { \
                                               &trans         &trans             &trans         &trans
             >;
         };
+
+        bluetooth {
+            label = "BT";
+            bindings = <
+                /* Row 1: Slots 0-4, previous slot, clear bondings */
+                &bt BT_SEL 0   &bt BT_SEL 1   &bt BT_SEL 2   &bt BT_SEL 3
+                &bt BT_SEL 4   &bt BT_PRV    &none          &none
+                &none          &bt BT_CLR
+
+                /* Row 2: system + volume + next, etc. */
+                &sys_reset     &bootloader   &kp C_VOL_DN   &kp C_VOL_UP
+                &kp C_MUTE     &bt BT_NXT    &kp C_BRI_DEC  &kp C_BRI_INC
+                &bootloader    &sys_reset
+
+                /* Row 3: more BT_CLR, soft off, etc. */
+                            &bt BT_CLR    &none          &soft_off
+                &soft_off      &none         &none
+
+                /* Final (thumb) row */
+                &trans         &none         &none          &trans
+            >;
+        };
+
 
         // Entire "buzz" layer commented out to remove PWM references:
         /*
